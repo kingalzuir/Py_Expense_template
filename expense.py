@@ -19,7 +19,6 @@ def getUsersAsJSON(spender):
                 res.append({"name": row[0], "checked": True})
                 continue
             res.append({"name": row[0]})
-            print(row)
     return res
 
 expense_questions = [
@@ -41,20 +40,14 @@ expense_questions = [
     }
 ]
 
-def expense_q(spender):
+def expense_involves(spender):
     return [{
         "type": "checkbox",
         'qmark': '😃',
         'message': 'Select people involved',
         'name': 'involves',
-        'choices': getUsersAsJSON(spender),
-        'validate': lambda answer: 'You must choose at least one topping.' \
-            if len(answer) == 0 else True
+        'choices': getUsersAsJSON(spender)
     }]
-
-
-
-
 
 def new_expense(*args):
     infos = prompt(expense_questions)
@@ -63,8 +56,10 @@ def new_expense(*args):
     label = infos["label"]
     spender = infos["spender"]
     
-    infos_spender = prompt(expense_q(spender))
-    involves = infos_spender["involves"]
+    involves = []
+    while (involves == []):
+        infos_spender = prompt(expense_involves(spender))
+        involves = infos_spender["involves"]
 
     expense = [amount, label, spender, involves]
     # Writing the informations on external file might be a good idea ¯\_(ツ)_/¯
